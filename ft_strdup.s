@@ -11,7 +11,7 @@ ft_strdup:
 
 	inc rax
 	mov rdi, rax
-	call malloc
+	call malloc wrt ..plt
 
 	cmp rax, 0
 	je .error
@@ -25,3 +25,5 @@ ft_strdup:
 .error:
 	pop rdi
 	ret
+
+section .note.GNU-stack noalloc noexec nowrite progbits

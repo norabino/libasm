@@ -14,8 +14,10 @@ ft_write:
 .error:
 	neg rax
 	push rax
-	call __errno_location
+	call __errno_location wrt ..plt
 	pop rcx
 	mov [rax], ecx
 	mov rax, -1
 	ret 
+
+section .note.GNU-stack noalloc noexec nowrite progbits

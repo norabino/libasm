@@ -6,7 +6,7 @@ extern __errno_location
 section .text
 ft_calloc:
 	cmp rdi, 0
-	je .alloc_zero
+	je .malloc_zero
 	cmp rsi, 0
 	je .malloc_zero
 
@@ -17,7 +17,7 @@ ft_calloc:
 	push rax				; alignement de taille de la pile + sauvegarde taille totale à malloc
 
 	mov rdi, rax
-	call malloc
+	call malloc wrt ..plt
 
 	cmp rax, 0
 	je .malloc_error
@@ -26,14 +26,14 @@ ft_calloc:
 	mov rdx, 0				; rdx = index = 0
 	jmp .bzero_loop
 
-.alloc_zero:
+.malloc_zero:
 	inc rdi
-	call malloc
+	call malloc wrt ..plt
 	ret
 
 .overflow:
 	push rax				; alignement de taille de la pile
-	call __errno_location
+	call __errno_location wrt ..plt
 	pop rcx
 
 	mov dword [rax], 12
@@ -51,3 +51,7 @@ ft_calloc:
 	inc rdx
 	jmp .bzero_loop
 
+.done:
+	ret
+
+section .note.GNU-stack noalloc noexec nowrite progbits

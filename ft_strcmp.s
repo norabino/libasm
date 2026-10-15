@@ -27,3 +27,5 @@ ft_strcmp:
 .same:
 	mov rax, 0
 	ret
+
+section .note.GNU-stack noalloc noexec nowrite progbits
