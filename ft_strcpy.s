@@ -2,12 +2,12 @@ global ft_strcpy
 
 section .text
 ft_strcpy:
-	move rax, rdi;
-	mov rcx, 0;
+	mov rax, rdi
+	mov rcx, 0
 
-.loop
-	mov dl, byte [rsi + rcx];
-	mov byte [rdi + rcx], dl;
+.loop:
+	mov dl, byte [rsi + rcx]
+	mov byte [rdi + rcx], dl
 
 	cmp dl, 0
 	je .done
@@ -15,5 +15,5 @@ ft_strcpy:
 	inc rcx
 	je .loop
 
-.done
-	ret;
+.done:
+	ret
