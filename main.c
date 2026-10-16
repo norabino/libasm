@@ -34,7 +34,7 @@ int main(void)
 
     printf("========== 4. FT_WRITE ==========" "\n");
     errno = 0;
-    ssize_t ret = ft_write(1, "Test d'ecriture : salut !\n", 32);
+    ssize_t ret = ft_write(1, "Test d'ecriture : salut !\n", 26);
     printf("Retour : %zd, Errno : %d (%s)\n", ret, errno, strerror(errno));
 
     errno = 0;
@@ -47,7 +47,7 @@ int main(void)
     if (fd != -1)
     {
         errno = 0;
-        ret = ft_read(fd, read_buf, 20);
+        ret = ft_read(fd, read_buf, 18);
         read_buf[ret > 0 ? ret : 0] = '\0';
         printf("Lecture reussie (%zd octets) : %s\n", ret, read_buf);
         close(fd);
@@ -57,25 +57,47 @@ int main(void)
     printf("Erreur fd (-1) -> Retour : %zd, Errno : %d (%s)\n\n", ret, errno, strerror(errno));
 
     printf("========== 6. FT_STRDUP ==========" "\n");
-    char *dup = ft_strdup("Hello world !");
-    printf("ft_strdup : %s\n", dup);
+    char *dup = strdup("Hello world !");
+    printf("C   strdup : %s\n", dup);
     free(dup);
+
+    dup = ft_strdup("Hello world !");
+    printf("ASM ft_strdup : %s\n", dup);
+    free(dup);
+
     printf("\n");
 
     printf("========== 7. FT_CALLOC ==========" "\n");
-    int *arr = (int *)ft_calloc(5, sizeof(int));
-    if (arr)
+    size_t nmemb = 5;
+    size_t size = sizeof(int);
+    int *c_arr = (int *)calloc(nmemb, size);
+    int *asm_arr = (int *)ft_calloc(nmemb, size);
+
+    if (c_arr)
     {
-        printf("calloc(5, sizeof(int)) [0, 0, 0, 0, 0] : ");
-        for (int i = 0; i < 5; i++)
-            printf("%d ", arr[i]);
+        printf("C   calloc(%zu, %zu) : ", nmemb, size);
+        for (size_t i = 0; i < nmemb; i++)
+            printf("%d ", c_arr[i]);
         printf("\n");
-        free(arr);
     }
+    if (asm_arr)
+    {
+        printf("ASM ft_calloc(%zu, %zu) : ", nmemb, size);
+        for (size_t i = 0; i < nmemb; i++)
+            printf("%d ", asm_arr[i]);
+        printf("\n");
+    }
+    if (c_arr && asm_arr)
+        printf("Comparaison : %s\n", memcmp(c_arr, asm_arr, nmemb * size) == 0 ? "OK" : "DIFF");
+    free(c_arr);
+    free(asm_arr);
 
     errno = 0;
     void *ptr_overflow = ft_calloc((size_t)-1, (size_t)-1);
-    printf("Debordement calloc -> Pointeur : %p, Errno : %d (%s)\n\n", ptr_overflow, errno, strerror(errno));
+    printf("ASM ft_calloc debordement -> Pointeur : %p, Errno : %d (%s)\n\n", ptr_overflow, errno, strerror(errno));
 
     return (0);
 }
+
+//ft_strcpy qui copie les mauvais bytes (unprintable)
+//ft_strdup qui duplique que le premier char

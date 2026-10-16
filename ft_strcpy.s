@@ -13,7 +13,7 @@ ft_strcpy:
 	je .done
 
 	inc rcx
-	je .loop
+	jmp .loop
 
 .done:
 	ret

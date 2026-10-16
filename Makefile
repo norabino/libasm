@@ -13,7 +13,7 @@ OBJS        = $(SRCS:.s=.o)
 NASM        = nasm
 NFLAGS      = -f elf64
 
-CC          = gcc
+CC          = cc
 CFLAGS      = -Wall -Wextra -Werror
 
 %.o: %.s
